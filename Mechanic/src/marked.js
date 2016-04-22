@@ -2,7 +2,8 @@
  * marked - a markdown parser
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
- * 来自marked，稍作修改
+ * 
+ * 这里对源码进行修改，修改的地方会包含注释，搜索“Change”即可看到
  */
 
 ;(function() {
@@ -16,7 +17,6 @@ var block = {
   code: /^( {4}[^\n]+\n*)+/,
   fences: noop,
   hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-  xcode: /^<(style|div|script)[\s\S]+?<\/\1>/,
   heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
   nptable: noop,
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -77,8 +77,9 @@ block.normal = merge({}, block);
  */
 
 block.gfm = merge({}, block.normal, {
-  fences: /^ *(`{3,}|~{3,}) *(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n+|$)/,
-  paragraph: /^/
+  fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,
+  paragraph: /^/,
+  heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
 });
 
 block.gfm.paragraph = replace(block.paragraph)
@@ -160,8 +161,6 @@ Lexer.prototype.token = function(src, top, bq) {
     , i
     , l;
 
-  src = src.trim();
-
   while (src) {
     // newline
     if (cap = this.rules.newline.exec(src)) {
@@ -173,18 +172,18 @@ Lexer.prototype.token = function(src, top, bq) {
       }
     }
 
-    // code 去掉默认的code格式，防止html冲突
-    // if (cap = this.rules.code.exec(src)) {
-    //   src = src.substring(cap[0].length);
-    //   cap = cap[0].replace(/^ {4}/gm, '');
-    //   this.tokens.push({
-    //     type: 'code',
-    //     text: !this.options.pedantic
-    //       ? cap.replace(/\n+$/, '')
-    //       : cap
-    //   });
-    //   continue;
-    // }
+    // code
+    if (cap = this.rules.code.exec(src)) {
+      src = src.substring(cap[0].length);
+      cap = cap[0].replace(/^ {4}/gm, '');
+      this.tokens.push({
+        type: 'code',
+        text: !this.options.pedantic
+          ? cap.replace(/\n+$/, '')
+          : cap
+      });
+      continue;
+    }
 
     // fences (gfm)
     if (cap = this.rules.fences.exec(src)) {
@@ -192,29 +191,10 @@ Lexer.prototype.token = function(src, top, bq) {
       this.tokens.push({
         type: 'code',
         lang: cap[2],
-        text: cap[3]
+        text: cap[3] || ''
       });
       continue;
     }
-    //添加xcode，即匹配script和style
-    if (cap = this.rules.xcode.exec(src)) {
-      src = src.substring(cap[0].length);
-      // console.log(src, cap[0]);
-      this.tokens.push({
-        type: 'xcode',
-        text: cap[0]
-      });
-      continue;
-    }
-
-    // if (cap = this.rules.script.exec(src)) {
-    //   src = src.substring(cap[0].length);
-    //   this.tokens.push({
-    //     type: 'script',
-    //     text: cap[0]
-    //   });
-    //   continue;
-    // }
 
     // heading
     if (cap = this.rules.heading.exec(src)) {
@@ -378,12 +358,12 @@ Lexer.prototype.token = function(src, top, bq) {
     // html
     if (cap = this.rules.html.exec(src)) {
       src = src.substring(cap[0].length);
-      // console.log(cap[0]);
       this.tokens.push({
         type: this.options.sanitize
           ? 'paragraph'
           : 'html',
-        pre: cap[1] === 'pre' || cap[1] === 'script' || cap[1] === 'style',
+        pre: !this.options.sanitizer
+          && (cap[1] === 'pre' || cap[1] === 'script' || cap[1] === 'style'),
         text: cap[0]
       });
       continue;
@@ -478,7 +458,7 @@ var inline = {
   reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
   nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
   strong: /^__([\s\S]+?)__(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,
-  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+  em: /^\b_((?:[^_]|__)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
@@ -531,8 +511,7 @@ inline.gfm = merge({}, inline.normal, {
  */
 
 inline.breaks = merge({}, inline.gfm, {
-  //注掉html中的回车
-  // br: replace(inline.br)('{2,}', '*')(),
+  br: replace(inline.br)('{2,}', '*')(),
   text: replace(inline.gfm.text)('{2,}', '*')()
 });
 
@@ -631,8 +610,10 @@ InlineLexer.prototype.output = function(src) {
       }
       src = src.substring(cap[0].length);
       out += this.options.sanitize
-        ? escape(cap[0])
-        : cap[0];
+        ? this.options.sanitizer
+          ? this.options.sanitizer(cap[0])
+          : escape(cap[0])
+        : cap[0]
       continue;
     }
 
@@ -703,7 +684,7 @@ InlineLexer.prototype.output = function(src) {
     // text
     if (cap = this.rules.text.exec(src)) {
       src = src.substring(cap[0].length);
-      out += escape(this.smartypants(cap[0]));
+      out += this.renderer.text(escape(this.smartypants(cap[0])));
       continue;
     }
 
@@ -737,7 +718,9 @@ InlineLexer.prototype.smartypants = function(text) {
   if (!this.options.smartypants) return text;
   return text
     // em-dashes
-    .replace(/--/g, '\u2014')
+    .replace(/---/g, '\u2014')
+    // en-dashes
+    .replace(/--/g, '\u2013')
     // opening singles
     .replace(/(^|[-\u2014/(\[{"\s])'/g, '$1\u2018')
     // closing singles & apostrophes
@@ -755,6 +738,7 @@ InlineLexer.prototype.smartypants = function(text) {
  */
 
 InlineLexer.prototype.mangle = function(text) {
+  if (!this.options.mangle) return text;
   var out = ''
     , l = text.length
     , i = 0
@@ -787,9 +771,10 @@ Renderer.prototype.code = function(code, lang, escaped) {
       code = out;
     }
   }
+
   if (!lang) {
     return '<pre><code>'
-      + (escaped ? code : escape(code, true)).trim()
+      + (escaped ? code : escape(code, true))
       + '\n</code></pre>';
   }
 
@@ -797,7 +782,7 @@ Renderer.prototype.code = function(code, lang, escaped) {
     + this.options.langPrefix
     + escape(lang, true)
     + '">'
-    + (escaped ? code : escape(code, true)).trim()
+    + (escaped ? code : escape(code, true))
     + '\n</code></pre>\n';
 };
 
@@ -809,16 +794,19 @@ Renderer.prototype.html = function(html) {
   return html;
 };
 
-
 Renderer.prototype.heading = function(text, level, raw) {
   return '<h'
     + level
     + '>'
+    //Change: Here, keep clean
+    // + ' id="'
+    // + this.options.headerPrefix
+    // + raw.toLowerCase().replace(/[^\w]+/g, '-')
+    // + '">'
     + text
     + '</h'
     + level
     + '>\n';
-
 };
 
 Renderer.prototype.hr = function() {
@@ -891,7 +879,7 @@ Renderer.prototype.link = function(href, title, text) {
     } catch (e) {
       return '';
     }
-    if (prot.indexOf('javascript:') === 0) {
+    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0) {
       return '';
     }
   }
@@ -899,7 +887,7 @@ Renderer.prototype.link = function(href, title, text) {
   if (title) {
     out += ' title="' + title + '"';
   }
-  out += ' target="_blank">' + text + '</a>';
+  out += '>' + text + '</a>';
   return out;
 };
 
@@ -910,6 +898,10 @@ Renderer.prototype.image = function(href, title, text) {
   }
   out += this.options.xhtml ? '/>' : '>';
   return out;
+};
+
+Renderer.prototype.text = function(text) {
+  return text;
 };
 
 /**
@@ -997,9 +989,6 @@ Parser.prototype.tok = function() {
         this.inline.output(this.token.text),
         this.token.depth,
         this.token.text);
-    }
-    case 'xcode': {
-      return this.renderer.html(this.token.text);
     }
     case 'code': {
       return this.renderer.code(this.token.text,
@@ -1258,6 +1247,8 @@ marked.defaults = {
   breaks: false,
   pedantic: false,
   sanitize: false,
+  sanitizer: null,
+  mangle: true,
   smartLists: false,
   silent: false,
   highlight: null,
