@@ -1,0 +1,15 @@
+{
+  "name": "mechanic",
+  "version": "0.0.0",
+  "description": "Service for fxprezi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Frank zhang",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^1.2.0",
+    "marked": "^0.3.5"
+  }
+}

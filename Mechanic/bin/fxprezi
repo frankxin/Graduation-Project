@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+	path = require('path'),
+	fxPrezi = require('../src/fxPrezi')
+
+fxPrezi.start()
