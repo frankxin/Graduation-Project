@@ -4,6 +4,8 @@
  * https://github.com/chjj/marked
  * 
  * 这里对源码进行修改，修改的地方会包含注释，搜索“Change”即可看到
+ * 2016.4.13 Frank zhang
+ * Email: frankxin93@gmail.com
  */
 
 ;(function() {
