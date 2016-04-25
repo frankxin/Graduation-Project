@@ -1,3 +1,12 @@
+Author: Frank
+Date: 2016.4.16
+
+
+[slide]
+
+[note]
+这里是一条笔记
+[/note]
 A First Level Header
 ====================
 
@@ -18,3 +27,11 @@ dog's back.
 > This is the second paragraph in the blockquote.
 >
 > ## This is an H2 in a blockquote
+
+[slide]
+
+[magic]
+> This is first
+======
+> This is second
+[/magic]
