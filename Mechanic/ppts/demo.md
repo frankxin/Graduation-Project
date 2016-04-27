@@ -29,7 +29,6 @@ dog's back.
 > ## This is an H2 in a blockquote
 
 [slide]
-
 [magic]
 > This is first
 ======

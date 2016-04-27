@@ -1,55 +1,54 @@
 <template>
-  <div class="app">
-    <form id="search">
-      Search <input name="query" v-model="searchQuery">
-    </form>
-    <div is="demo-grid"
-      v-bind:data="gridData"
-      v-bind:columns="gridColumns"
-      v-bind:filter-key="searchQuery">
-    </div>
-
-
-    <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <!-- use the modal component, pass in the prop -->
-    <modal :show.sync="showModal">
-      <!--
-        you can use custom content here to overwrite
-        default content
-      -->
-      <h3 slot="header">custom header</h3>
-    </modal>
+  <div id="app">
+    <h1>Hello App!</h1>
+    <p>
+      <!-- 使用指令 v-link 进行导航。 -->
+      <a v-link="{ path: '/list' }">Go to list</a>
+      <a v-link="{ path: '/md' }">Go to md</a>
+    </p>
+    <!-- 路由外链 -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import DemoGrid from './DemoGrid.vue'
-import Modal from './Modal.vue'
+var Vue = require('vue')
+var VueRouter = require('vue-router')
 
-export default {
-  data: function() {
-    return {
-      searchQuery: '',
-      showModal: false,
-      gridColumns: ['name', 'power'],
-      gridData: [{
-        name: 'Chuck Norris',
-        power: Infinity
-      }, {
-        name: 'Bruce Lee',
-        power: 9000
-      }, {
-        name: 'Jackie Chan',
-        power: 7000
-      }, {
-        name: 'Jet Li',
-        power: 8000
-      }]
+Vue.use(VueRouter)
+
+
+// 定义组件
+var List = Vue.extend({
+    template: '<p>This is list!</p>'
+})
+
+var Md = Vue.extend({
+    template: '<p>This is md!</p>'
+})
+
+// 路由器需要一个根组件。
+// 出于演示的目的，这里使用一个空的组件，直接使用 HTML 作为应用的模板
+// var App = Vue.extend({})
+
+// 创建一个路由器实例
+// 创建实例时可以传入配置参数进行定制，为保持简单，这里使用默认配置
+var router = new VueRouter()
+
+// 定义路由规则
+// 每条路由规则应该映射到一个组件。这里的“组件”可以是一个使用 Vue.extend
+// 创建的组件构造函数，也可以是一个组件选项对象。
+// 稍后我们会讲解嵌套路由
+router.map({
+    '/list': {
+        component: List
+    },
+    '/bar': {
+        component: Md
     }
-  },
-  components: {
-    DemoGrid,
-    Modal
-  }
-}
+})
+
+// 现在我们可以启动应用了！
+// 路由器会创建一个 App 实例，并且挂载到选择符 #app 匹配的元素上。
+router.start(App, '#app')
 </script>

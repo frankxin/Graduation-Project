@@ -1,7 +1,7 @@
 var libDir = __dirname
 
-function start(){
-  require(libDir + '/func').start()
+function start(mdName){
+  return require(libDir + '/func').start(mdName)
 }
 
 module.exports = {

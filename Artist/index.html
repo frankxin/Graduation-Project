@@ -1,6 +1,19 @@
 <!-- index.html -->
 <body>
+	<head>
+		<script type="text/javascript" src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+	</head>
   <!-- demo root element -->
-  <app></app>
+  <div id="app">
+  <h1>Hello App!</h1>
+  <!-- <p>
+    <!-- 使用指令 v-link 进行导航
+    <a v-link="{ path: '/list' }">Go to list</a>
+    <a v-link="{ path: '/md' }">Go to md</a>
+  </p>
+  -->
+  <!-- 路由外链 -->
+  <router-view></router-view>
+</div>
   <script src="build.js"></script>
 </body>
