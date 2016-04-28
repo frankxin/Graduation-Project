@@ -14,11 +14,9 @@ router.get('/md/:name', function *(next) {
   this.response.set({
     'Content-Type': 'text/html'
   })
-  var b = new Buffer(content);
-  var s = b.toString('base64');
-  this.
-  // req.query.callback + '('+ JSON.stringify(obj) + ');');
-  // this.body = JSON.stringify({content: s})
+
+  this.body = this.request.query.callback + 
+    '(' + JSON.stringify({content: content}) + ');'
 })
 
 /** 
@@ -27,14 +25,6 @@ router.get('/md/:name', function *(next) {
 router.get('/list', function *(next){
   this.body = 'list'
 })
-
-// router.get('/favicon.ico', function *(next) {
-//   this.response.set({
-//     'Content-Type': 'image/x-icon'
-//   })
-//   var content =  fs.readFileSync('./img/favicon.ico')
-//   this.body = content
-// })
 
 function escapQuot(html){
   return String(html).replace(/"/g, '&quot;');

@@ -4,15 +4,12 @@
 
 <script>
 	export default {
-		template: '<p id="md">{{message}}</p>',
 		data: function(){
 			return{
 				message: 'loading...'
 			}
 		},
 		created: function(){
-			debugger
-			console.log(this)
 			this.load()
 		},
 		methods: {
@@ -25,9 +22,8 @@
 						"Access-Control-Allow-Origin" : "*"
 					}
 				}).done(function(data){
-					console.log(data)
-					// this.message = unescape(data)
-				})
+					this.message = data.content
+				}.bind(this))
 			}
 		}
 	}
