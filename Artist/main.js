@@ -4,6 +4,9 @@ var    Vue = require('vue'),
         Md = require('./components/Md.vue'),
       List = require('./components/List.vue')
 
+
+require('./style/index.less')
+
 Vue.use(VueRouter)
 
 

@@ -17,7 +17,9 @@ router.get('/md/:name', function *(next) {
     'Content-Type': 'text/html'
   })
   
-  this.body = getJsonp.call(this, [{content: content}])
+  console.log(getJsonp.call(this, {content: content}))
+  
+  this.body = getJsonp.call(this, {content: content})
 
 })
 
@@ -28,7 +30,7 @@ router.get('/list', function *(next){
   
   var list = getList(libDir + '/ppts')
   
-  this.body = getJsonp.call(this, [{list: list}])
+  this.body = getJsonp.call(this, {list: list})
   
 })
 
@@ -36,7 +38,7 @@ router.get('/list', function *(next){
  * getJsonp 需要通过绑定上下文环境调用，且上下文环境中有this.request参数
  */
 function getJsonp(obj){
-  this.request.query.callback + '(' + JSON.stringify(obj) + ');'
+  return this.request.query.callback + '(' + JSON.stringify(obj) + ');'
 }
 
 // router.get('/favicon.ico', function *(next) {

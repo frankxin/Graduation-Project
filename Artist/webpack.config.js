@@ -16,6 +16,10 @@ module.exports = {
         loader: 'vue'   // loader to use for matched files
       },
       {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!postcss-loader!less-loader'
+      },
+      {
         test: /\.js$/,
         loader: 'babel',
         // important: exclude files in node_modules
