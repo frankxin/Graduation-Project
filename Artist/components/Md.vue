@@ -10,8 +10,6 @@
 			}
 		},
 		created: function(){
-			// debugger
-			console.log(this)
 			this.load()
 		},
 		methods: {
@@ -24,8 +22,7 @@
 						"Access-Control-Allow-Origin" : "*"
 					}
 				}).done(function(data){
-					console.log(data)
-				  this.message = data.content
+					this.message = data.content
 				}.bind(this))
 			}
 		}
