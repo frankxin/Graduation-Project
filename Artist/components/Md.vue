@@ -3,7 +3,6 @@
 </template>
 
 <script>
-	var async = require('./common.js')
 	export default {
 		data: function(){
 			return{
@@ -20,20 +19,18 @@
 			bindEvent: function (){
 				var $slide = $('.slide'),
 					 $slides = $('#slides')
-				$slide.eq(0).addClass('now')
-				$slide.eq(1).addClass('next')
+				$slide.addClass('next')
+				$slide.eq(0).removeClass('next').addClass('now')
 				document.onkeydown = function(e){
 					console.log(e.which)
 					if(e.keyCode === 39){
 						if($slides.find('.now').next().length !== 0){
-							$slides.find('.now').removeClass('now').addClass('prev').prev().removeClass('prev')
-						  $slides.find('.next').removeClass('next').addClass('now').next().addClass('next')
+							$slides.find('.now').removeClass('now').addClass('prev').next().removeClass('next').addClass('now')
 						}
 					}else if(e.keyCode === 37){
 						if($slides.find('.now').prev().length !== 0){
 							$slides.find('.now').removeClass('now').addClass('next').prev().removeClass('prev').addClass('now')
-							$slides.find('.next').removeClass('.next')
-						}
+							}
 					}else{
 						return false
 					}

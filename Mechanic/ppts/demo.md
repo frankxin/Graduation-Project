@@ -34,3 +34,7 @@ dog's back.
 ======
 > This is second
 [/magic]
+
+[slide]
+##header
+-----
