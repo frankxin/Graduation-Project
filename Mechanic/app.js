@@ -2,7 +2,9 @@ var koa = require('koa'),
     app = koa(),
      fs = require('fs'),
 fxPrezi = require('./src/fxPrezi'),
- router = require('koa-router')()
+getList = require('./src/getList'),
+ router = require('koa-router')(),
+ libDir = __dirname
 
 /**
  * 处理展示主页的请求
@@ -14,19 +16,28 @@ router.get('/md/:name', function *(next) {
   this.response.set({
     'Content-Type': 'text/html'
   })
-  var b = new Buffer(content);
-  var s = b.toString('base64');
-  this.
-  // req.query.callback + '('+ JSON.stringify(obj) + ');');
-  // this.body = JSON.stringify({content: s})
+  
+  this.body = getJsonp.call(this, [{content: content}])
+
 })
 
 /** 
  * 处理展示列表的请求
  */
 router.get('/list', function *(next){
-  this.body = 'list'
+  
+  var list = getList(libDir + '/ppts')
+  
+  this.body = getJsonp.call(this, [{list: list}])
+  
 })
+
+/**
+ * getJsonp 需要通过绑定上下文环境调用，且上下文环境中有this.request参数
+ */
+function getJsonp(obj){
+  this.request.query.callback + '(' + JSON.stringify(obj) + ');'
+}
 
 // router.get('/favicon.ico', function *(next) {
 //   this.response.set({

@@ -4,14 +4,13 @@
 
 <script>
 	export default {
-		template: '<p id="md">{{message}}</p>',
 		data: function(){
 			return{
 				message: 'loading...'
 			}
 		},
 		created: function(){
-			debugger
+			// debugger
 			console.log(this)
 			this.load()
 		},
@@ -26,8 +25,8 @@
 					}
 				}).done(function(data){
 					console.log(data)
-					// this.message = unescape(data)
-				})
+				  this.message = data.content
+				}.bind(this))
 			}
 		}
 	}
