@@ -68,7 +68,7 @@ function start(mdName){
 			
 		})
 		
-		console.log(slides)
+		// console.log(slides)
 		return slides.join('\n')
 
 	}else{
@@ -80,7 +80,7 @@ function start(mdName){
  * parseConfig : handle the config and writer informations
  */
 function parseConfig(string) {
-	console.log(string)
+	// console.log(string)
 }
 
 /**

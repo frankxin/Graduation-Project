@@ -36,5 +36,13 @@ dog's back.
 [/magic]
 
 [slide]
+[note]
+从这里开始我是另一条的笔记
+* 而且有list
+* 那这里会不会出bug呢~
+[/note]
 ##header
 -----
+* This is the first list
+* This is the second list
+* This is the third list

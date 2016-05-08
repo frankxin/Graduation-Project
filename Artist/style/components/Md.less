@@ -1,3 +1,20 @@
+
+ul {
+    margin-left: 1.2em;
+    position: relative;
+    list-style: disc inside;
+    text-align: left;
+    display: inline-block;
+  li{
+    line-height: 1.75em;
+    list-style-position: outside;
+  }
+}
+.overview #slides{
+  > .slide{
+    transform: scale3d(.3, .3, .3);
+  }
+}
 #slides{
   width: 100%;
   height: 100%;
@@ -27,6 +44,15 @@
       justify-content: center;
       align-content: center;
       height: 100%;
+      > ul{
+        li{
+          opacity: 0;
+          transition: opacity 500ms;
+        } 
+        li.build{
+          opacity: 1;
+        }
+      }
     }
   }
   > .next{
@@ -38,5 +64,17 @@
   > .now{
     transform: translate3d(0,0,0);
     z-index: 10;
+  }
+}
+.magic{
+  > .prev{
+    opacity: 0;
+  }
+  > .now{
+    transition: opacity 500ms;
+    opacity: 1;
+  }
+  > .next{
+    opacity: 0;
   }
 }

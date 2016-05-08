@@ -2,12 +2,18 @@
 var    Vue = require('vue'),
  VueRouter = require('vue-router'),
         Md = require('./components/Md.vue'),
-      List = require('./components/List.vue')
+      List = require('./components/List.vue'),
+    Remote = require('./components/Remote.vue'),
+  VueTouch = require('vue-touch'),
+ FastClick = require('fastclick')
+
+FastClick.attach(document.body)
 
 
 require('./style/index.less')
 
 Vue.use(VueRouter)
+Vue.use(VueTouch)
 
 
 // 定义组件
@@ -37,6 +43,9 @@ router.map({
     },
     '/md': {
         component: Md
+    },
+    '/remote': {
+      component: Remote
     }
 })
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --inline --hot",
+    "dev": "webpack-dev-server --inline --hot --port 80 --host 192.168.8.105",
     "build": "webpack -p"
   },
   "repository": {
@@ -38,7 +38,10 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "fastclick": "^1.0.6",
+    "socket.io-client": "^1.4.6",
     "vue": "^1.0.16",
-    "vue-router": "^0.7.13"
+    "vue-router": "^0.7.13",
+    "vue-touch": "^1.1.0"
   }
 }
