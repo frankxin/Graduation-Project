@@ -34,12 +34,13 @@
 				  let $magicEntity = everySlide.find('.magic-entity')
 				  $magicEntity.addClass('next')
 				  $magicEntity.eq(0).removeClass('next').addClass('now')
-				  let transformStyle = i == 0 ? "" : "translate("+ (32*i) + '%,0) scale3d(.3, .3, .3)'  
-				 	everySlide.css('transform',transformStyle)
 				} 
 			},
 			overviewMode: function(){
-				
+				var $slide = $('.slide')
+				var $slides = $('#slides')
+				$('#app').addClass('overview')
+				this.overviewMove($slides, $slide)
 			},
 			magicSlide: function(keyCode){
 				var $slides = $('#slides')
@@ -91,6 +92,7 @@
 				return `translate(${num}%, 0) scale3d(.3, .3, .3)`
 			},
 		  overviewMove: function($slides, $slide) {
+		  	// debugger
 				var indexCurr = $slides.children('.now').index()
 				$slide.eq(indexCurr).css('transform', this.concatTransformStr(0))
 				for (var i = indexCurr, step = 0; i > 0; i--) {
@@ -100,6 +102,13 @@
 				for (var i = indexCurr, step = 0; i < $slide.length; i++) {
 					$slide.eq(i + 1).css('transform', this.concatTransformStr(step + 32))
 					step += 32
+				}
+			},
+			exitOverviewMode: function(){
+				var $slide = $('.slide')
+				$('#app').removeClass('overview')
+				for (var i = 0; i < $slide.length; i++) {
+					$slide.eq(i).css('transform',"")
 				}
 			},
 			bindEvent: function (){
@@ -122,6 +131,14 @@
 					console.log(e.which)
 					//这里首先要判断当前页面是不是有需要magic的元素
 					// debugger
+					if(e.keyCode === 83){
+						if($('.overview').length){
+							this.exitOverviewMode()
+						}else{
+							this.overviewMode()
+						}
+						return false
+					}
 					if ($('body').children('.overview').length) {
 						if (e.keyCode === 39) {
 							if($slides.children('.now').next().length){
