@@ -30,7 +30,6 @@
 				$slide.eq(0).removeClass('next').addClass('now')
 				//为每一页中的元素都要进行初始化
 				for(var i=0; i<$slide.length ;i++){
-					debugger
 				  let	everySlide = $($slide[i])
 				  let $magicEntity = everySlide.find('.magic-entity')
 				  $magicEntity.addClass('next')
@@ -38,6 +37,9 @@
 				  let transformStyle = i == 0 ? "" : "translate("+ (32*i) + '%,0) scale3d(.3, .3, .3)'  
 				 	everySlide.css('transform',transformStyle)
 				} 
+			},
+			overviewMode: function(){
+				
 			},
 			magicSlide: function(keyCode){
 				var $slides = $('#slides')
@@ -85,6 +87,21 @@
 					}
 				}
 			},
+			concatTransformStr: function(num){
+				return `translate(${num}%, 0) scale3d(.3, .3, .3)`
+			},
+		  overviewMove: function($slides, $slide) {
+				var indexCurr = $slides.children('.now').index()
+				$slide.eq(indexCurr).css('transform', this.concatTransformStr(0))
+				for (var i = indexCurr, step = 0; i > 0; i--) {
+					$slide.eq(i - 1).css('transform', this.concatTransformStr(step - 32))
+					step -= 32
+				}
+				for (var i = indexCurr, step = 0; i < $slide.length; i++) {
+					$slide.eq(i + 1).css('transform', this.concatTransformStr(step + 32))
+					step += 32
+				}
+			},
 			bindEvent: function (){
 				var $slide = $('.slide'),
 					 $slides = $('#slides')
@@ -105,6 +122,25 @@
 					console.log(e.which)
 					//这里首先要判断当前页面是不是有需要magic的元素
 					// debugger
+					if ($('body').children('.overview').length) {
+						if (e.keyCode === 39) {
+							if($slides.children('.now').next().length){
+								$slides.children('.now').removeClass('now').addClass('prev').next().removeClass('next').addClass('now')
+								this.overviewMove($slides, $slide)
+							}else{
+								//最后一个Slider
+							}
+						} else if (e.keyCode === 37) {
+							if($slides.children('.now').prev().length){
+								$slides.children('.now').removeClass('now').addClass('next').prev().removeClass('prev').addClass('now')
+
+								this.overviewMove($slides, $slide)
+							}else{
+								//第一个slider
+							}
+						}	
+						return false
+					}
 					if($slides.children('.now').find('.magic').length){
 						//这里如果magic域存在，那么左右轮播事件有可能被挟持，如果此时magic在第一部分，则向左轮播事件被通过
 						//如果此时magic在最后，则向右轮播事件通过，其他事件均执行magic，并return false
