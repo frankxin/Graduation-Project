@@ -9,8 +9,8 @@ var    Vue = require('vue'),
 
 FastClick.attach(document.body)
 
-
 require('./style/index.less')
+require('material-design-lite/material.min.js')
 
 Vue.use(VueRouter)
 Vue.use(VueTouch)
