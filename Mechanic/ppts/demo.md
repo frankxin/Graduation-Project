@@ -46,3 +46,9 @@ dog's back.
 * This is the first list
 * This is the second list
 * This is the third list
+
+[slide]
+## This is a pic
+[magic]
+![](http://wd.geilicdn.com/vshop173115993-1450838631311-5072595.jpg)
+[/magic]

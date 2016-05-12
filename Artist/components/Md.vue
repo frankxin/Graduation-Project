@@ -31,6 +31,7 @@
 				//为每一页中的元素都要进行初始化
 				for(var i=0; i<$slide.length ;i++){
 				  let	everySlide = $($slide[i])
+				  // everySlide.find('.slide-wrap > ul > li').addClass('bounceIn')
 				  let $magicEntity = everySlide.find('.magic-entity')
 				  $magicEntity.addClass('next')
 				  $magicEntity.eq(0).removeClass('next').addClass('now')
@@ -76,14 +77,14 @@
 					if(numOfPos === $li.length-1){
 						return true
 					}else{
-						$li.eq(numOfPos + 1).addClass('build')
+						$li.eq(numOfPos + 1).addClass('animated build flipInX')
 						return false
 					}
 				}else if(keyCode === 37){
 					if(numOfPos === -1){
 						return true
 					}else{
-						$li.eq(numOfPos).removeClass('build')
+						$li.eq(numOfPos).removeClass('animated build flipInX')
 						return false
 					}
 				}

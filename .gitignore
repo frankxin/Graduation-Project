@@ -6,3 +6,4 @@ _src/
 .idea/
 *.iml
 static/
+**/.DS_Store
