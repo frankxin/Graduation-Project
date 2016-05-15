@@ -9,7 +9,8 @@
 		data: function(){
 			return{
 				message: 'loading...',
-				socket: null
+				socket: null,
+				mdName: this.$route.params.mdName
 			}
 		},
 		created: function(){
@@ -189,7 +190,7 @@
 				return new Promise((resolve,reject) => {
 					// zepto of this version don't have  callback module , so you can't use xhr.done()...
 					$.ajax({
-						url: Config.apiUrl + "md/demo",
+						url: Config.apiUrl + "md/" + this.mdName,
 						method: 'GET',
 						dataType: 'jsonp',
 						success: (data) => {

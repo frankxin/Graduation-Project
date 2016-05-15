@@ -41,7 +41,7 @@ router.map({
     '/list': {
         component: List
     },
-    '/md': {
+    '/md/:mdName': {
         component: Md
     },
     '/remote': {
