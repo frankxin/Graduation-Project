@@ -1,4 +1,4 @@
 export default {
-  apiUrl: "http://192.168.8.102:3000/",
-  baseHost: "http://192.168.8.102:8080"
-}
+    apiUrl: "http://192.168.31.234:3000/",
+    baseHost: "192.168.31.234:8080"
+  }
